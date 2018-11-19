@@ -4,6 +4,7 @@ from src.Ball import *
 from src.Platform import *
 from src.Plate import *
 
+
 class GameState:
 
     def __init__(self, app):
@@ -16,6 +17,41 @@ class GameState:
             'platform': None,
             'plates': []
         }
+
+    def preupdate(self):
+        self._init_game_objects()
+
+    def _init_game_objects(self):
+        """
+        Init primary game state
+        :return: None
+        """
+        self.ball = Ball(self.app, (500, 449))
+        self.platform = Platform((450, 590))
+        self.plates = self._create_plates_table()
+        self.score = 0
+
+        self.game_objects = {
+            'ball': self.ball,
+            'platform': self.platform,
+            'plates': self.plates
+        }
+
+    def _create_plates_table(self):
+        """
+        Creates plates table for destroying. 9 row and 16 columns.
+        :return:
+        """
+        result = []
+        y_row = 5
+        for row in range(9):
+            x_row = 5
+            for column in range(16):
+                result.append(Plate((x_row, y_row)))
+                x_row += 55
+            y_row += 25
+
+        return result
 
     def update(self):
         self._handle_events()
@@ -36,21 +72,7 @@ class GameState:
             self.game_over = self.ball.y > self.app.window.height
 
         self.app.window.display()
-    def _create_plates_table(self):
-        """
-        Creates plates table for destroying. 9 row and 16 columns.
-        :return:
-        """
-        result = []
-        y_row = 5
-        for row in range(9):
-            x_row = 5
-            for column in range(16):
-                result.append(Plate((x_row, y_row)))
-                x_row += 55
-            y_row += 25
 
-        return result
 
     def _handle_events(self):
         """
@@ -80,25 +102,6 @@ class GameState:
             self.platform.move(-4)
         elif keys[pygame.K_RIGHT] and self.platform.x + 101 <= self.app.window.width:
             self.platform.move(4)
-
-    def preupdate(self):
-        self._init_game_objects()
-
-    def _init_game_objects(self):
-        """
-        Init primary game state
-        :return: None
-        """
-        self.ball = Ball(self.app, (500, 449))
-        self.platform = Platform((450, 590))
-        self.plates = self._create_plates_table()
-        self.score = 0
-
-        self.game_objects = {
-            'ball': self.ball,
-            'platform': self.platform,
-            'plates': self.plates
-        }
 
     def _destroy_collided_plates(self):
         """
