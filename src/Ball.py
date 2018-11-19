@@ -50,11 +50,11 @@ class Ball():
         Change speed of a ball when platform is collided
         :return: None
         """
-        if self.x <= self.app.platform.x + 25:
+        if self.x <= self.app.game_state.platform.x + 25:
             self.speed = [-2, -1]
-        elif self.x <= self.app.platform.x + 50:
+        elif self.x <= self.app.game_state.platform.x + 50:
             self.speed = [-1, -1]
-        elif self.x <= self.app.platform.x + 75:
+        elif self.x <= self.app.game_state.platform.x + 75:
             self.speed = [1, -1]
-        elif self.x <= self.app.platform.x + 100:
+        elif self.x <= self.app.game_state.platform.x + 100:
             self.speed = [2, -1]

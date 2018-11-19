@@ -41,7 +41,7 @@ class Window():
         Draw game objects for interaction
         :return: None
         """
-        for name, object in self.app.game_objects.items():
+        for name, object in self.app.game_state.game_objects.items():
             if name == 'plates':
                 for plate in object:
                     plate.draw(self.screen)
