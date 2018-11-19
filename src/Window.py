@@ -22,6 +22,7 @@ class Window():
         """
         pygame.init()
         self.screen = pygame.display.set_mode((self.width, self.height))
+        level = pygame.surface.Surface((self.width, self.height), pygame.SRCALPHA, 32)
         pygame.display.set_caption(self.title)
 
     def display(self):
@@ -42,8 +43,9 @@ class Window():
         :return: None
         """
         for name, object in self.app.game_state.game_objects.items():
-            if name == 'plates':
-                for plate in object:
-                    plate.draw(self.screen)
-            else:
+            if name == 'player':
                 object.draw(self.screen)
+            else:
+                for o in object:
+                    o.draw(self.screen)
+

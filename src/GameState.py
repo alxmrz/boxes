@@ -1,8 +1,8 @@
 import sys
 import pygame
-from src.Ball import *
-from src.Platform import *
-from src.Plate import *
+from src.Player import *
+from src.Box import *
+from src.Wall import *
 
 
 class GameState:
@@ -26,15 +26,15 @@ class GameState:
         Init primary game state
         :return: None
         """
-        self.ball = Ball(self.app, (500, 449))
-        self.platform = Platform((450, 590))
-        self.plates = self._create_plates_table()
+        self.box = Box((300, 300))
+        self.player = Player((400, 300))
+        self.walls = Wall((300, 500))
         self.score = 0
 
         self.game_objects = {
-            'ball': self.ball,
-            'platform': self.platform,
-            'plates': self.plates
+            'player': self.player,
+            'boxes': (self.box,),
+            'walls': (self.walls,)
         }
 
     def _create_plates_table(self):
@@ -55,24 +55,10 @@ class GameState:
 
     def update(self):
         self._handle_events()
-        if self.game_started and not self.game_over:
-            self._handle_platform_moving()
 
-            self.ball.change_direction_border()
 
-            if self._destroy_collided_plates():
-                self.ball.change_direction_plate()
-
-            if self.platform.colliderect(self.ball.get_rect()):
-                self.ball.change_direction_platform()
-
-            self.ball.move()
-
-            # if self.ball is outside the screen game is over
-            self.game_over = self.ball.y > self.app.window.height
 
         self.app.window.display()
-
 
     def _handle_events(self):
         """
@@ -82,6 +68,7 @@ class GameState:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
+                sys.exit(0)
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     if not self.game_started:
@@ -91,28 +78,50 @@ class GameState:
                         self._init_game_objects()
                     else:
                         self.game_started = False
+                elif event.key == pygame.K_LEFT:
+                    self.player.move(-50)
+                    if not self.move_collided_box('LEFT'):
+                        self.player.move(50)
+                elif event.key == pygame.K_RIGHT:
+                    self.player.move(50)
+                    if not self.move_collided_box('RIGHT'):
+                        self.player.move(-50)
+                elif event.key == pygame.K_UP:
+                    self.player.move(0, -50)
+                    if not self.move_collided_box('UP'):
+                        self.player.move(0, 50)
+                elif event.key == pygame.K_DOWN:
+                    self.player.move(0, 50)
+                    if not self.move_collided_box('DOWN'):
+                        self.player.move(0, -50)
 
-    def _handle_platform_moving(self):
-        """
-        Change platform position when pressed arrows keys
-        :return:
-        """
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT] and self.platform.x - 1 >= 0:
-            self.platform.move(-4)
-        elif keys[pygame.K_RIGHT] and self.platform.x + 101 <= self.app.window.width:
-            self.platform.move(4)
+    def move_collided_box(self, direction):
+        for box in self.game_objects['boxes']:
+            if box.colliderect(self.player):
+                if direction == 'UP':
+                    box.move(0, -50)
+                    if self.is_wall(box):
+                        box.move(0, 50)
+                        return False
+                elif direction == 'DOWN':
+                    box.move(0, 50)
+                    if self.is_wall(box):
+                        box.move(0, -50)
+                        return False
+                elif direction == 'LEFT':
+                    box.move(-50)
+                    if self.is_wall(box):
+                        box.move(50)
+                        return False
+                elif direction == 'RIGHT':
+                    box.move(50)
+                    if self.is_wall(box):
+                        box.move(-50)
+                        return False
+        return True
 
-    def _destroy_collided_plates(self):
-        """
-        Destroy collided object and increment score
-        If no one object can be destroyed return False
-        :return: bool
-        """
-        for index, object in enumerate(self.plates):
-            if object.colliderect(self.ball.get_rect()):
-                del self.plates[index]
-                self.score += 10
+    def is_wall(self, object):
+        for wall in self.game_objects['walls']:
+            if object.colliderect(wall):
                 return True
-
         return False
