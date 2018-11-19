@@ -30,34 +30,49 @@ class GameState:
         self.player = Player((400, 300))
         self.walls = Wall((300, 500))
         self.score = 0
-
         self.game_objects = {
             'player': self.player,
-            'boxes': (self.box,),
-            'walls': (self.walls,)
+            'boxes': [],
+            'walls': []
         }
 
-    def _create_plates_table(self):
+        self.level1 = """
+        WWWWWWWWWWWWWWWWWW
+        WPW   W     W    W
+        W W W W W W W  W W
+        W   W W W W W  W W
+        W W W W W W W  W W   
+        W W W W W W W  W W   
+        W W W   W        W   
+        WWWWWWW     WWWWWW 
+        WW       WWWWWWWWW 
+        WWWWWWWW      WWWW 
+        WWW      WWWWWWWWW 
+        WWWWWWWWWWWWWWWWWW 
         """
-        Creates plates table for destroying. 9 row and 16 columns.
-        :return:
-        """
-        result = []
-        y_row = 5
-        for row in range(9):
-            x_row = 5
-            for column in range(16):
-                result.append(Plate((x_row, y_row)))
-                x_row += 55
-            y_row += 25
 
-        return result
+        self.generate_level_objects(self.level1)
+
+    def generate_level_objects(self, level):
+        level = level.strip().split('\n')
+
+        y = 0
+        for line in level:
+            line = line.strip()
+            x = 0
+            for ch in line:
+                if ch == 'W':
+                    self.game_objects['walls'].append(Wall((x, y)))
+                elif ch == "P":
+                    self.player = Player((x, y))
+                    self.game_objects['player'] = self.player
+                elif ch == "B":
+                    self.game_objects['boxes'].append(Box((x, y)))
+                x+= 50
+            y+=50
 
     def update(self):
         self._handle_events()
-
-
-
         self.app.window.display()
 
     def _handle_events(self):
@@ -80,19 +95,19 @@ class GameState:
                         self.game_started = False
                 elif event.key == pygame.K_LEFT:
                     self.player.move(-50)
-                    if not self.move_collided_box('LEFT'):
+                    if not self.move_collided_box('LEFT') or self.is_wall(self.player):
                         self.player.move(50)
                 elif event.key == pygame.K_RIGHT:
                     self.player.move(50)
-                    if not self.move_collided_box('RIGHT'):
+                    if not self.move_collided_box('RIGHT') or self.is_wall(self.player):
                         self.player.move(-50)
                 elif event.key == pygame.K_UP:
                     self.player.move(0, -50)
-                    if not self.move_collided_box('UP'):
+                    if not self.move_collided_box('UP') or self.is_wall(self.player):
                         self.player.move(0, 50)
                 elif event.key == pygame.K_DOWN:
                     self.player.move(0, 50)
-                    if not self.move_collided_box('DOWN'):
+                    if not self.move_collided_box('DOWN') or self.is_wall(self.player):
                         self.player.move(0, -50)
 
     def move_collided_box(self, direction):
