@@ -46,7 +46,20 @@ class GameState:
 
     def _start_new_game(self):
         self.current_level = 0
+        self.game_started = True
         self._init_new_level()
+
+    def _show_rules_page(self):
+        self._reset_game_objects()
+        self.game_objects['texts'].append(
+            Text(self.app.window.UI, """
+            You play as a red box!
+            Your goal is to push green boxes to circles.
+            When they will be on circles the game is finished.""", (450, 200))
+        )
+        self.game_objects['buttons'].append(
+            Button(self.app.window.UI, "Back", "back", (600, 300))
+        )
 
     def _init_new_level(self):
         self.player = Player((400, 300))
@@ -86,10 +99,15 @@ class GameState:
         for button in self.game_objects['buttons']:
             if button.is_hovered():
                 button.color = Window.colors['red']
-            elif button.is_clicked() and button.id == 'new':
-                self._start_new_game()
-                self.game_started = True
-                button.color = Window.colors['blue']
+            elif button.is_clicked():
+                if button.id == 'new':
+                    self._start_new_game()
+                elif button.id == 'rules':
+                    self._show_rules_page()
+                elif button.id == 'back':
+                    self._init_start_menu()
+                elif button.id == 'exit':
+                    sys.exit(0)
             else:
                 button.color = Window.colors['green']
         if self.game_started and self.is_level_completed():
