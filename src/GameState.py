@@ -7,6 +7,7 @@ from src.Target import *
 import src.levels as levels
 from src.Button import *
 from src.Window import *
+from src.Text import *
 
 
 class GameState:
@@ -34,6 +35,7 @@ class GameState:
             'targets': [],
             'boxes': [],
             'walls': [],
+            'texts': [],
             #'player': None,
             'buttons': [
                 Button(self.app.window.UI, "New game", "new", (400, 100)),
@@ -42,12 +44,17 @@ class GameState:
             ]
         }
 
+    def _start_new_game(self):
+        self.current_level = 0
+        self._init_new_level()
+
     def _init_new_level(self):
         self.player = Player((400, 300))
         self.game_objects = {
             'targets': [],
             'boxes': [],
             'walls': [],
+            'texts': [],
             'player': self.player,
             'buttons': []
         }
@@ -80,21 +87,27 @@ class GameState:
             if button.is_hovered():
                 button.color = Window.colors['red']
             elif button.is_clicked() and button.id == 'new':
-                self._init_new_level()
+                self._start_new_game()
                 self.game_started = True
                 button.color = Window.colors['blue']
             else:
                 button.color = Window.colors['green']
         if self.game_started and self.is_level_completed():
             self.current_level += 1
-            if self.current_level >= len(levels.levels) - 2:
+            if self.current_level >= len(levels.levels):
                 self._init_game_finished()
             else:
                 self._init_new_level()
 
     def _init_game_finished(self):
         self._reset_game_objects()
-        self.game_objects['buttons'].append(Button(self.app.window.UI, "You win!", "win", (300, 100)))
+        self.game_objects['texts'].append(
+            Text(self.app.window.UI, "You win!\nCongratulations!", (450, 200))
+        )
+        self.game_objects['buttons'].append(
+            Button(self.app.window.UI, "New game", "new", (450, 300))
+        )
+
 
     def _handle_events(self):
         """
@@ -169,6 +182,7 @@ class GameState:
             'targets': [],
             'boxes': [],
             'walls': [],
+            'texts': [],
             # 'player': None,
             'buttons': []
         }
