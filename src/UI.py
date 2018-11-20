@@ -14,15 +14,15 @@ class UI:
         """
         pass
 
-    def _show_text(self, text, coords):
+    def _show_text(self, text, coords, size=50, color=(255, 255, 255)):
         """
         Show text on the screen
         :param text: string
         :param coords: list
         :return: None
         """
-        font = pygame.font.SysFont('freesansbold.ttf', 50)
-        textsurface = font.render(text, True, (255, 255, 255))
+        font = pygame.font.SysFont('freesansbold.ttf', size)
+        textsurface = font.render(text, True, color)
         textsurfaceRectObj = textsurface.get_rect()
         textsurfaceRectObj.center = coords
         self.app.window.screen.blit(textsurface, textsurfaceRectObj)

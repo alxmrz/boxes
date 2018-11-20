@@ -5,9 +5,11 @@ from src.Box import *
 from src.Wall import *
 from src.Target import *
 import src.levels as levels
+from src.Button import *
+from src.Window import *
+
 
 class GameState:
-
     def __init__(self, app):
         self.game_started = False
         self.game_over = False
@@ -21,26 +23,38 @@ class GameState:
         }
 
     def preupdate(self):
-        self._init_game_objects()
+        self._init_start_menu()
 
-    def _init_game_objects(self):
+    def _init_start_menu(self):
         """
         Init primary game state
         :return: None
         """
+        self.game_objects = {
+            'targets': [],
+            'boxes': [],
+            'walls': [],
+            #'player': None,
+            'buttons': [
+                Button(self.app.window.UI, "New game", "new", (300, 100))
+            ]
+        }
+
+    def _init_new_level(self):
         self.player = Player((400, 300))
         self.game_objects = {
             'targets': [],
             'boxes': [],
             'walls': [],
             'player': self.player,
+            'buttons': []
         }
 
         self.generate_level_objects(levels.levels[self.current_level])
 
     def generate_level_objects(self, level):
+        print (level)
         level = level.strip().split('\n')
-
         y = 0
         for line in level:
             line = line.strip()
@@ -60,9 +74,19 @@ class GameState:
 
     def update(self):
         self._handle_events()
-        if self.is_level_completed():
+        for button in self.game_objects['buttons']:
+            if button.is_hovered():
+                button.color = Window.colors['red']
+            elif button.is_clicked() and button.id == 'new':
+                self._init_new_level()
+                self.game_started = True
+                button.color = Window.colors['blue']
+            else:
+                button.color = Window.colors['green']
+        if self.game_started and self.is_level_completed():
             self.current_level += 1
-            self._init_game_objects()
+            self._init_new_level()
+
 
     def _handle_events(self):
         """

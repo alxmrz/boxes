@@ -3,6 +3,13 @@ import pygame
 
 
 class Window():
+    colors = {
+        'black': (0, 0, 0),
+        'white': (255, 255, 255),
+        'red': (255, 0, 0),
+        'green': (0, 255, 0),
+        'blue': (0, 0, 255)
+    }
 
     def __init__(self, app, width, height, title):
         self.title = title
@@ -12,7 +19,11 @@ class Window():
         self.app = app
         self.screen = None
         self.colors = {
-            'black': (0, 0, 0)
+            'black': (0, 0, 0),
+            'white': (255, 255, 255),
+            'red': (255, 0, 0),
+            'green': (0, 255, 0),
+            'blue': (0, 0, 255)
         }
 
     def init(self):
