@@ -36,7 +36,9 @@ class GameState:
             'walls': [],
             #'player': None,
             'buttons': [
-                Button(self.app.window.UI, "New game", "new", (300, 100))
+                Button(self.app.window.UI, "New game", "new", (400, 100)),
+                Button(self.app.window.UI, "Rules", "rules", (400, 250)),
+                Button(self.app.window.UI, "Exit", "exit", (400, 400))
             ]
         }
 
@@ -85,8 +87,14 @@ class GameState:
                 button.color = Window.colors['green']
         if self.game_started and self.is_level_completed():
             self.current_level += 1
-            self._init_new_level()
+            if self.current_level >= len(levels.levels) - 2:
+                self._init_game_finished()
+            else:
+                self._init_new_level()
 
+    def _init_game_finished(self):
+        self._reset_game_objects()
+        self.game_objects['buttons'].append(Button(self.app.window.UI, "You win!", "win", (300, 100)))
 
     def _handle_events(self):
         """
@@ -155,3 +163,12 @@ class GameState:
             if target.status == False:
                 return False
         return True
+
+    def _reset_game_objects(self):
+        self.game_objects = {
+            'targets': [],
+            'boxes': [],
+            'walls': [],
+            # 'player': None,
+            'buttons': []
+        }
