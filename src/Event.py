@@ -54,6 +54,8 @@ class Event():
                     self.game_state.scene.show_rules_page()
                 elif button.id == 'back':
                     self.game_state.scene.init_start_menu()
+                elif button.id == 'restart':
+                    self.game_state.scene.init_new_level()
                 elif button.id == 'exit':
                     sys.exit(0)
             else:

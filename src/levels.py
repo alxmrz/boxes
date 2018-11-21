@@ -27,8 +27,31 @@ WT       B W
 WWWWWWWWWWWW
 """
 
+level4 = """
+WWWWWWWWWWWW
+WT      W  W
+WWW     W  W
+WTWWWWBBB  W
+W   B    W W   
+WT     P WTW
+WWWWWWWWWWWW
+"""
+
+level5 = """
+WWWWWWWWWWWW
+W B  TW   PW
+W WW  W    W
+WTWWW   W  W
+W   B  BWWWW   
+WB  T    T W
+W        WWW
+WWWWWWWWWWWW
+"""
+
 levels = [
     level1,
     level2,
-    level3
+    level3,
+    level4,
+    level5
 ]

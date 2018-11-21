@@ -72,6 +72,11 @@ class Scene:
         self.game_objects.player = Player((400, 300))
 
         self._generate_level_objects(levels[self.game_state.current_level])
+        self.game_objects.buttons.extend([
+            Button(self.ui, "Restart", "restart", (10, 500)),
+            Button(self.ui, "Exit", "exit", (200, 500))
+            ]
+        )
 
     def _generate_level_objects(self, level):
         """
