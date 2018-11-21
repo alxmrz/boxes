@@ -1,4 +1,4 @@
-import src.levels as levels
+from src.levels import levels
 from src.Player import Player
 from src.Box import Box
 from src.Wall import Wall
@@ -55,10 +55,9 @@ class Scene:
 
     def init_new_level(self):
         self.game_objects.reset()
-        self.game_state.player = Player((400, 300))
-        self.game_objects.player = self.game_state.player
+        self.game_objects.player = Player((400, 300))
 
-        self._generate_level_objects(levels.levels[self.game_state.current_level])
+        self._generate_level_objects(levels[self.game_state.current_level])
 
     def _generate_level_objects(self, level):
         level = level.strip().split('\n')
@@ -70,8 +69,7 @@ class Scene:
                 if ch == 'W':
                     self.game_objects.walls.append(Wall((x, y)))
                 elif ch == "P":
-                    self.game_state.player = Player((x, y))
-                    self.game_objects.player = self.game_state.player
+                    self.game_objects.player = Player((x, y))
                 elif ch == "B":
                     self.game_objects.boxes.append(Box((x, y)))
                 elif ch == "T":

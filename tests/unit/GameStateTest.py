@@ -17,18 +17,18 @@ class GameStateTest(unittest.TestCase):
         self.gs = None
 
     def testIsLevelCompleted(self):
-        self.gs.game_objects['boxes'] = [
+        self.gs.game_objects.targets = [
             Box((300, 300)),
             Box((400, 300)),
         ]
-        self.gs.game_objects['targets'] = [
+        self.gs.game_objects.targets = [
             Target((320, 320)),
             Target((420, 320)),
         ]
         assert Box((300, 300)).colliderect(Target((300, 300)).get_rect()) == True
         assert Box((400, 300)).colliderect(Target((420, 320)).get_rect()) == True
         assert self.gs.is_level_completed() == True
-        self.gs.game_objects['targets'] = [
+        self.gs.game_objects.targets = [
             Target((20, 320)),
             Target((320, 320)),
         ]

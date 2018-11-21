@@ -1,5 +1,5 @@
 import pygame
-
+from src.Window import Window
 
 class Target:
     def __init__(self, coords):
@@ -8,11 +8,11 @@ class Target:
         self.width = 40
         self.height = 40
         self.radius = 20
-        self.rect = pygame.Rect((self.x - 20, self.y - 20), (self.width, self.height))
+        self.rect = pygame.Rect((self.x - self.radius, self.y - self.radius), (self.width, self.height))
         self.status = False
 
     def get_rect(self):
         return self.rect
 
     def draw(self, screen):
-        pygame.draw.circle(screen, (200, 40, 70), (self.x, self.y), self.radius)
+        pygame.draw.circle(screen, Window.colors['red'], (self.x, self.y), self.radius)

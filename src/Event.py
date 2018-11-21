@@ -1,6 +1,7 @@
 import pygame
 import sys
 from src.Window import Window
+from src.Player import Player
 
 
 class Event():
@@ -20,21 +21,21 @@ class Event():
                 sys.exit(0)
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
-                    self.game_objects.player.move(-50)
+                    self.game_objects.player.move('LEFT', -Player.width)
                     if not self.game_state.move_collided_box('LEFT') or self.game_state.is_wall(self.game_objects.player):
-                        self.game_objects.player.move(50)
+                        self.game_objects.player.move('LEFT', Player.width)
                 elif event.key == pygame.K_RIGHT:
-                    self.game_objects.player.move(50)
+                    self.game_objects.player.move('RIGHT', Player.width)
                     if not self.game_state.move_collided_box('RIGHT') or self.game_state.is_wall(self.game_objects.player):
-                        self.game_objects.player.move(-50)
+                        self.game_objects.player.move('RIGHT', -Player.width)
                 elif event.key == pygame.K_UP:
-                    self.game_objects.player.move(0, -50)
+                    self.game_objects.player.move('UP', 0, -Player.height)
                     if not self.game_state.move_collided_box('UP') or self.game_state.is_wall(self.game_objects.player):
-                        self.game_objects.player.move(0, 50)
+                        self.game_objects.player.move('UP', 0, Player.height)
                 elif event.key == pygame.K_DOWN:
-                    self.game_objects.player.move(0, 50)
+                    self.game_objects.player.move('DOWN', 0, Player.height)
                     if not self.game_state.move_collided_box('DOWN') or self.game_state.is_wall(self.game_objects.player):
-                        self.game_objects.player.move(0, -50)
+                        self.game_objects.player.move('DOWN', 0, -Player.height)
 
         self._handle_buttons_events()
 

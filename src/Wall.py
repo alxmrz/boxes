@@ -7,6 +7,8 @@ class Wall(pygame.Rect):
         self.y = coords[1]
         self.width = 50
         self.heidht = 50
+        self.image = pygame.image.load("images/wall.png")
+        self.image = pygame.transform.scale(self.image, (50, 50))
         super().__init__((self.x, self.y), (self.width, self.heidht))
 
     def move(self, x=0, y=0):
@@ -14,4 +16,5 @@ class Wall(pygame.Rect):
         self.y += y
 
     def draw(self, screen):
-        pygame.draw.rect(screen, (0, 0, 255), [self.x, self.y, self.width, self.heidht])
+        screen.blit(self.image, self)
+        #pygame.draw.rect(screen, (0, 0, 255), [self.x, self.y, self.width, self.heidht])

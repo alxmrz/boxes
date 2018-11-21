@@ -1,4 +1,5 @@
-from src.UI import *
+from src.UI import UI
+from src.Player import Player
 import pygame
 
 
@@ -16,15 +17,10 @@ class Window:
         self.width = width
         self.height = height
         self.UI = UI(app)
+        self.fps = 60
         self.app = app
         self.screen = None
-        self.colors = {
-            'black': (0, 0, 0),
-            'white': (255, 255, 255),
-            'red': (255, 0, 0),
-            'green': (0, 255, 0),
-            'blue': (0, 0, 255)
-        }
+        self.clock = pygame.time.Clock()
 
     def init(self):
         """
@@ -40,17 +36,21 @@ class Window:
         Display scnene, objects and ui
         :return: None
         """
+        dt = self.clock.tick(self.fps) / 1000
         self.screen.fill(self.colors['black'])
 
-        self._draw_scene_objects()
+        self._draw_scene_objects(dt)
 
         pygame.display.flip()
 
-    def _draw_scene_objects(self):
+    def _draw_scene_objects(self, dt):
         """
         Draw game objects for interaction
         :return: None
         """
-        for object in self.app.game_state.game_objects.all():
-            if object is not None:
-                object.draw(self.screen)
+        for obj in self.app.game_state.game_objects.all():
+            if obj is not None:
+                if isinstance(obj, Player):
+                    obj.draw(self.screen, dt)
+                else:
+                    obj.draw(self.screen)

@@ -10,4 +10,4 @@ class Text:
         y = self.y
         for line in lines:
             self.ui.show_text(line, (self.x, y), 30)
-            y+= 32
+            y += 32
