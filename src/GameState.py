@@ -159,22 +159,22 @@ class GameState:
             if box.colliderect(self.player):
                 if direction == 'UP':
                     box.move(0, -50)
-                    if self.is_wall(box):
+                    if self.is_wall(box) or self.is_box(box):
                         box.move(0, 50)
                         return False
                 elif direction == 'DOWN':
                     box.move(0, 50)
-                    if self.is_wall(box):
+                    if self.is_wall(box) or self.is_box(box):
                         box.move(0, -50)
                         return False
                 elif direction == 'LEFT':
                     box.move(-50)
-                    if self.is_wall(box):
+                    if self.is_wall(box) or self.is_box(box):
                         box.move(50)
                         return False
                 elif direction == 'RIGHT':
                     box.move(50)
-                    if self.is_wall(box):
+                    if self.is_wall(box) or self.is_box(box):
                         box.move(-50)
                         return False
         return True
@@ -182,6 +182,12 @@ class GameState:
     def is_wall(self, object):
         for wall in self.game_objects['walls']:
             if object.colliderect(wall):
+                return True
+        return False
+
+    def is_box(self, object):
+        for box in self.game_objects['boxes']:
+            if box is not object and object.colliderect(box):
                 return True
         return False
 

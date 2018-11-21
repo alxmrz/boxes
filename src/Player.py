@@ -10,10 +10,8 @@ class Player(pygame.Rect):
         super().__init__((self.x, self.y), (self.width, self.heidht))
 
     def move(self, x=0, y=0):
-        print('BEFORE:', (self.x, self.y))
         self.x += x
         self.y += y
-        print('AFTER:', (self.x, self.y))
 
     def change_coords(self, coords):
         self.x = coords[0]
