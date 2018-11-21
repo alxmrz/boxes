@@ -19,6 +19,3 @@ class Application:
         while self.running:
             self.game_state.update()
             self.window.display()
-
-
-

@@ -8,18 +8,26 @@ class GameObjects:
         self.player = None
 
     def all(self):
-        all = []
+        """
+        Get a list of all objects of the game
+        :return: List
+        """
+        result = []
 
-        all.extend(self.targets)
-        all.extend(self.boxes)
-        all.extend(self.walls)
-        all.extend(self.texts)
-        all.extend(self.buttons)
-        all.append(self.player)
+        result.extend(self.targets)
+        result.extend(self.boxes)
+        result.extend(self.walls)
+        result.extend(self.texts)
+        result.extend(self.buttons)
+        result.append(self.player)
 
-        return all
+        return result
 
     def reset(self):
+        """
+        Delete game objects
+        :return:
+        """
         self.targets = []
         self.boxes = []
         self.walls = []

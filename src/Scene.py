@@ -15,7 +15,7 @@ class Scene:
 
     def init_start_menu(self):
         """
-        Init primary game state
+        Init start menu page
         :return: None
         """
         self.game_objects.reset()
@@ -28,6 +28,10 @@ class Scene:
         )
 
     def show_rules_page(self):
+        """
+        Init rules page
+        :return: None
+        """
         self.game_objects.reset()
         self.game_objects.texts.append(
             Text(self.ui, """
@@ -40,6 +44,10 @@ class Scene:
         )
 
     def init_game_finished(self):
+        """
+        If game is finished show relevant message
+        :return:
+        """
         self.game_objects.reset()
         self.game_objects.texts.append(
             Text(self.ui, "You win!\nCongratulations!", (450, 200))
@@ -49,17 +57,28 @@ class Scene:
         )
 
     def start_new_game(self):
+        """
+        :return: None
+        """
         self.game_state.current_level = 0
         self.game_state.game_started = True
         self.init_new_level()
 
     def init_new_level(self):
+        """
+        :return: None
+        """
         self.game_objects.reset()
         self.game_objects.player = Player((400, 300))
 
         self._generate_level_objects(levels[self.game_state.current_level])
 
     def _generate_level_objects(self, level):
+        """
+        Generate objects of level from special string
+        :param level: string
+        :return:
+        """
         level = level.strip().split('\n')
         y = 0
         for line in level:

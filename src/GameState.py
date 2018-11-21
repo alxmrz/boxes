@@ -15,15 +15,28 @@ class GameState:
         self.event = Event(self, self.game_objects)
 
     def preupdate(self):
+        """
+        Actions must be done before main loop
+        :return:
+        """
         self.scene.init_start_menu()
 
     def update(self):
+        """
+        Update game state
+        :return:
+        """
         self.event.handle()
 
         if self.game_started and self.is_level_completed():
             self._finish_current_level()
 
     def move_collided_box(self, direction):
+        """
+        Move box if it was collided with player
+        :param direction: string
+        :return: bool is moving was available
+        """
         for box in self.game_objects.boxes:
             if box.colliderect(self.game_objects.player):
                 if direction == 'UP':
@@ -49,18 +62,32 @@ class GameState:
         return True
 
     def is_wall(self, obj):
+        """
+        Is wall interfering for next moving
+        :param obj: mixed
+        :return: bool
+        """
         for wall in self.game_objects.walls:
             if obj.colliderect(wall):
                 return True
         return False
 
     def is_box(self, obj):
+        """
+        Is box interfering for next moving
+        :param obj:
+        :return:
+        """
         for box in self.game_objects.boxes:
             if box is not obj and obj.colliderect(box):
                 return True
         return False
 
     def _finish_current_level(self):
+        """
+        Finish current level and make another or finish the game
+        :return: None
+        """
         self.current_level += 1
         if self.current_level >= len(levels):
             self.scene.init_game_finished()
@@ -68,6 +95,10 @@ class GameState:
             self.scene.init_new_level()
 
     def is_level_completed(self):
+        """
+        Is game finished (player win)
+        :return:
+        """
         for target in self.game_objects.targets:
             for box in self.game_objects.boxes:
                 if box.colliderect(target.get_rect()):

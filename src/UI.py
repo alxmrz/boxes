@@ -11,7 +11,7 @@ class UI:
         """
         Show text on the screen
         :param text: string
-        :param coords: list
+        :param coords: List
         :return: None
         """
         font = pygame.font.SysFont(self.font, size)

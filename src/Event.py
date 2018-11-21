@@ -40,6 +40,10 @@ class Event():
         self._handle_buttons_events()
 
     def _handle_buttons_events(self):
+        """
+        Hangling button events (hover, click)
+        :return: None
+        """
         for button in self.game_objects.buttons:
             if button.is_hovered():
                 button.color = Window.colors['red']

@@ -1,4 +1,8 @@
 class Text:
+    """
+    Class for representing text.
+    Especially useful for multiline string
+    """
     def __init__(self, ui, text, coords):
         self.text = text
         self.ui = ui
@@ -6,6 +10,11 @@ class Text:
         self.y = coords[1]
 
     def draw(self, screen):
+        """
+        Display string. If it is multiline every line must end with \n
+        :param screen: pygame.surface.Surface
+        :return: None
+        """
         lines = self.text.strip().split('\n')
         y = self.y
         for line in lines:

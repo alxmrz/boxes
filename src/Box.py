@@ -12,9 +12,19 @@ class Box(pygame.Rect):
         super().__init__((self.x, self.y), (self.width, self.height))
 
     def move(self, x=0, y=0):
+        """
+        Move object
+        :param x: int
+        :param y: int
+        :return: None
+        """
         self.x += x
         self.y += y
 
     def draw(self, screen):
+        """
+        Draw object presentation
+        :param screen: pygame.surface.Surface
+        :return: None
+        """
         screen.blit(self.image, self)
-        #pygame.draw.rect(screen, (0, 255, 0), [self.x, self.y, self.width, self.height])

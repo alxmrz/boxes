@@ -33,10 +33,11 @@ class Window:
 
     def display(self):
         """
-        Display scnene, objects and ui
+        Display game objects with animation
         :return: None
         """
         dt = self.clock.tick(self.fps) / 1000
+
         self.screen.fill(self.colors['black'])
 
         self._draw_scene_objects(dt)
@@ -45,7 +46,7 @@ class Window:
 
     def _draw_scene_objects(self, dt):
         """
-        Draw game objects for interaction
+        Draw game objects from game state
         :return: None
         """
         for obj in self.app.game_state.game_objects.all():
