@@ -53,10 +53,7 @@ class Window():
         Draw game objects for interaction
         :return: None
         """
-        for name, object in self.app.game_state.game_objects.items():
-            if name == 'player':
+        for object in self.app.game_state.game_objects.all():
+            if object is not None:
                 object.draw(self.screen)
-            else:
-                for o in object:
-                    o.draw(self.screen)
 

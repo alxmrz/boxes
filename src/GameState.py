@@ -8,6 +8,7 @@ import src.levels as levels
 from src.Button import *
 from src.Window import *
 from src.Text import *
+from src.GameObjects import *
 
 
 class GameState:
@@ -17,11 +18,7 @@ class GameState:
         self.score = 0
         self.app = app
         self.current_level = 0
-        self.game_objects = {
-            'ball': None,
-            'platform': None,
-            'plates': []
-        }
+        self.game_objects = GameObjects()
 
     def preupdate(self):
         self._init_start_menu()
@@ -31,18 +28,14 @@ class GameState:
         Init primary game state
         :return: None
         """
-        self.game_objects = {
-            'targets': [],
-            'boxes': [],
-            'walls': [],
-            'texts': [],
-            #'player': None,
-            'buttons': [
+        self.game_objects.reset()
+        self.game_objects.buttons.extend(
+            [
                 Button(self.app.window.UI, "New game", "new", (400, 100)),
                 Button(self.app.window.UI, "Rules", "rules", (400, 250)),
                 Button(self.app.window.UI, "Exit", "exit", (400, 400))
             ]
-        }
+        )
 
     def _start_new_game(self):
         self.current_level = 0
@@ -50,32 +43,25 @@ class GameState:
         self._init_new_level()
 
     def _show_rules_page(self):
-        self._reset_game_objects()
-        self.game_objects['texts'].append(
+        self.game_objects.reset()
+        self.game_objects.texts.append(
             Text(self.app.window.UI, """
             You play as a red box!
             Your goal is to push green boxes to circles.
             When they will be on circles the game is finished.""", (450, 200))
         )
-        self.game_objects['buttons'].append(
+        self.game_objects.buttons.append(
             Button(self.app.window.UI, "Back", "back", (600, 300))
         )
 
     def _init_new_level(self):
+        self.game_objects.reset()
         self.player = Player((400, 300))
-        self.game_objects = {
-            'targets': [],
-            'boxes': [],
-            'walls': [],
-            'texts': [],
-            'player': self.player,
-            'buttons': []
-        }
+        self.game_objects.player = self.player
 
         self.generate_level_objects(levels.levels[self.current_level])
 
     def generate_level_objects(self, level):
-        print (level)
         level = level.strip().split('\n')
         y = 0
         for line in level:
@@ -83,20 +69,20 @@ class GameState:
             x = 0
             for ch in line:
                 if ch == 'W':
-                    self.game_objects['walls'].append(Wall((x, y)))
+                    self.game_objects.walls.append(Wall((x, y)))
                 elif ch == "P":
                     self.player = Player((x, y))
-                    self.game_objects['player'] = self.player
+                    self.game_objects.player = self.player
                 elif ch == "B":
-                    self.game_objects['boxes'].append(Box((x, y)))
+                    self.game_objects.boxes.append(Box((x, y)))
                 elif ch == "T":
-                    self.game_objects['targets'].append(Target((x+25, y+25)))
+                    self.game_objects.targets.append(Target((x+25, y+25)))
                 x+= 50
             y+=50
 
     def update(self):
         self._handle_events()
-        for button in self.game_objects['buttons']:
+        for button in self.game_objects.buttons:
             if button.is_hovered():
                 button.color = Window.colors['red']
             elif button.is_clicked():
@@ -118,14 +104,13 @@ class GameState:
                 self._init_new_level()
 
     def _init_game_finished(self):
-        self._reset_game_objects()
-        self.game_objects['texts'].append(
+        self.game_objects.reset()
+        self.game_objects.texts.append(
             Text(self.app.window.UI, "You win!\nCongratulations!", (450, 200))
         )
-        self.game_objects['buttons'].append(
+        self.game_objects.buttons.append(
             Button(self.app.window.UI, "New game", "new", (450, 300))
         )
-
 
     def _handle_events(self):
         """
@@ -155,7 +140,7 @@ class GameState:
                         self.player.move(0, -50)
 
     def move_collided_box(self, direction):
-        for box in self.game_objects['boxes']:
+        for box in self.game_objects.boxes:
             if box.colliderect(self.player):
                 if direction == 'UP':
                     box.move(0, -50)
@@ -180,33 +165,23 @@ class GameState:
         return True
 
     def is_wall(self, object):
-        for wall in self.game_objects['walls']:
+        for wall in self.game_objects.walls:
             if object.colliderect(wall):
                 return True
         return False
 
     def is_box(self, object):
-        for box in self.game_objects['boxes']:
+        for box in self.game_objects.boxes:
             if box is not object and object.colliderect(box):
                 return True
         return False
 
     def is_level_completed(self):
-        for target in self.game_objects['targets']:
-            for box in self.game_objects['boxes']:
+        for target in self.game_objects.targets:
+            for box in self.game_objects.boxes:
                 if box.colliderect(target.get_rect()):
                     target.status = True
-        for target in self.game_objects['targets']:
+        for target in self.game_objects.targets:
             if target.status == False:
                 return False
         return True
-
-    def _reset_game_objects(self):
-        self.game_objects = {
-            'targets': [],
-            'boxes': [],
-            'walls': [],
-            'texts': [],
-            # 'player': None,
-            'buttons': []
-        }
