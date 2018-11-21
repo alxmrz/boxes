@@ -2,7 +2,7 @@ from src.UI import *
 import pygame
 
 
-class Window():
+class Window:
     colors = {
         'black': (0, 0, 0),
         'white': (255, 255, 255),
@@ -44,7 +44,6 @@ class Window():
         self.screen.fill(self.colors['black'])
 
         self._draw_scene_objects()
-        self.UI.show()
 
         pygame.display.flip()
 

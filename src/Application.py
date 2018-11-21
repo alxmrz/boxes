@@ -5,8 +5,8 @@ from src.GameState import *
 class Application:
     def __init__(self):
         self.running = True
-        self.game_state = GameState(self)
         self.window = Window(self, 900, 600, 'Arkanoid')
+        self.game_state = GameState(self)
 
     def run(self):
         """

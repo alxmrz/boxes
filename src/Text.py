@@ -9,5 +9,5 @@ class Text:
         lines = self.text.strip().split('\n')
         y = self.y
         for line in lines:
-            self.ui._show_text(line, (self.x, y), 30)
+            self.ui.show_text(line, (self.x, y), 30)
             y+= 32

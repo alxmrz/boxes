@@ -25,5 +25,5 @@ class Button(pygame.Rect):
 
     def draw(self, screen):
         pygame.draw.rect(screen, self.color, [self.x, self.y, self.width, self.heidht], 2)
-        self.ui._show_text(self.text, (self.x + self.width//2, self.y + self.height // 2), 30)
+        self.ui.show_text(self.text, (self.x + self.width // 2, self.y + self.height // 2), 30)
 
