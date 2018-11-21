@@ -1,6 +1,6 @@
 import pygame
 import sys
-from src.Window import *
+from src.Window import Window
 
 
 class Event():
@@ -35,6 +35,7 @@ class Event():
                     self.game_objects.player.move(0, 50)
                     if not self.game_state.move_collided_box('DOWN') or self.game_state.is_wall(self.game_objects.player):
                         self.game_objects.player.move(0, -50)
+
         self._handle_buttons_events()
 
     def _handle_buttons_events(self):

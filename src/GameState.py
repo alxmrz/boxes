@@ -1,16 +1,8 @@
-import sys
-import pygame
-from src.Player import *
-from src.Box import *
-from src.Wall import *
-from src.Target import *
-import src.levels as levels
-from src.Button import *
-from src.Window import *
-from src.Text import *
-from src.GameObjects import *
-from src.Scene import *
-from src.Event import *
+from src.GameObjects import GameObjects
+from src.Scene import Scene
+from src.Event import Event
+from src.levels import levels
+
 
 class GameState:
     def __init__(self, app):
@@ -56,21 +48,21 @@ class GameState:
                         return False
         return True
 
-    def is_wall(self, object):
+    def is_wall(self, obj):
         for wall in self.game_objects.walls:
-            if object.colliderect(wall):
+            if obj.colliderect(wall):
                 return True
         return False
 
-    def is_box(self, object):
+    def is_box(self, obj):
         for box in self.game_objects.boxes:
-            if box is not object and object.colliderect(box):
+            if box is not obj and obj.colliderect(box):
                 return True
         return False
 
     def _finish_current_level(self):
         self.current_level += 1
-        if self.current_level >= len(levels.levels):
+        if self.current_level >= len(levels):
             self.scene.init_game_finished()
         else:
             self.scene.init_new_level()

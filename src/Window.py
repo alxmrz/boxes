@@ -33,7 +33,6 @@ class Window:
         """
         pygame.init()
         self.screen = pygame.display.set_mode((self.width, self.height))
-        level = pygame.surface.Surface((self.width, self.height), pygame.SRCALPHA, 32)
         pygame.display.set_caption(self.title)
 
     def display(self):
@@ -55,4 +54,3 @@ class Window:
         for object in self.app.game_state.game_objects.all():
             if object is not None:
                 object.draw(self.screen)
-

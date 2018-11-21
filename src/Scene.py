@@ -1,12 +1,10 @@
-from src.Player import *
-from src.Box import *
-from src.Wall import *
-from src.Target import *
 import src.levels as levels
-from src.Button import *
-from src.Window import *
-from src.Text import *
-from src.GameObjects import *
+from src.Player import Player
+from src.Box import Box
+from src.Wall import Wall
+from src.Target import Target
+from src.Button import Button
+from src.Text import Text
 
 
 class Scene:
