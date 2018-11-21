@@ -1,118 +1,109 @@
-import sys
-import pygame
-from src.Ball import *
-from src.Platform import *
-from src.Plate import *
+from src.GameObjects import GameObjects
+from src.Scene import Scene
+from src.Event import Event
+from src.levels import levels
 
 
 class GameState:
-
     def __init__(self, app):
         self.game_started = False
         self.game_over = False
-        self.score = 0
         self.app = app
-        self.game_objects = {
-            'ball': None,
-            'platform': None,
-            'plates': []
-        }
+        self.current_level = 0
+        self.game_objects = GameObjects()
+        self.scene = Scene(self, self.game_objects, self.app.window.UI)
+        self.event = Event(self, self.game_objects)
 
     def preupdate(self):
-        self._init_game_objects()
-
-    def _init_game_objects(self):
         """
-        Init primary game state
-        :return: None
-        """
-        self.ball = Ball(self.app, (500, 449))
-        self.platform = Platform((450, 590))
-        self.plates = self._create_plates_table()
-        self.score = 0
-
-        self.game_objects = {
-            'ball': self.ball,
-            'platform': self.platform,
-            'plates': self.plates
-        }
-
-    def _create_plates_table(self):
-        """
-        Creates plates table for destroying. 9 row and 16 columns.
+        Actions must be done before main loop
         :return:
         """
-        result = []
-        y_row = 5
-        for row in range(9):
-            x_row = 5
-            for column in range(16):
-                result.append(Plate((x_row, y_row)))
-                x_row += 55
-            y_row += 25
-
-        return result
+        self.scene.init_start_menu()
 
     def update(self):
-        self._handle_events()
-        if self.game_started and not self.game_over:
-            self._handle_platform_moving()
-
-            self.ball.change_direction_border()
-
-            if self._destroy_collided_plates():
-                self.ball.change_direction_plate()
-
-            if self.platform.colliderect(self.ball.get_rect()):
-                self.ball.change_direction_platform()
-
-            self.ball.move()
-
-            # if self.ball is outside the screen game is over
-            self.game_over = self.ball.y > self.app.window.height
-
-        self.app.window.display()
-
-
-    def _handle_events(self):
         """
-        Handling events
-        :return: None
-        """
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
-                    if not self.game_started:
-                        self.game_started = True
-                    elif self.game_over:
-                        self.game_over = False
-                        self._init_game_objects()
-                    else:
-                        self.game_started = False
-
-    def _handle_platform_moving(self):
-        """
-        Change platform position when pressed arrows keys
+        Update game state
         :return:
         """
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT] and self.platform.x - 1 >= 0:
-            self.platform.move(-4)
-        elif keys[pygame.K_RIGHT] and self.platform.x + 101 <= self.app.window.width:
-            self.platform.move(4)
+        self.event.handle()
 
-    def _destroy_collided_plates(self):
+        if self.game_started and self.is_level_completed():
+            self._finish_current_level()
+
+    def move_collided_box(self, direction):
         """
-        Destroy collided object and increment score
-        If no one object can be destroyed return False
+        Move box if it was collided with player
+        :param direction: string
+        :return: bool is moving was available
+        """
+        for box in self.game_objects.boxes:
+            if box.colliderect(self.game_objects.player):
+                if direction == 'UP':
+                    box.move(0, -50)
+                    if self.is_wall(box) or self.is_box(box):
+                        box.move(0, 50)
+                        return False
+                elif direction == 'DOWN':
+                    box.move(0, 50)
+                    if self.is_wall(box) or self.is_box(box):
+                        box.move(0, -50)
+                        return False
+                elif direction == 'LEFT':
+                    box.move(-50)
+                    if self.is_wall(box) or self.is_box(box):
+                        box.move(50)
+                        return False
+                elif direction == 'RIGHT':
+                    box.move(50)
+                    if self.is_wall(box) or self.is_box(box):
+                        box.move(-50)
+                        return False
+        return True
+
+    def is_wall(self, obj):
+        """
+        Is wall interfering for next moving
+        :param obj: mixed
         :return: bool
         """
-        for index, object in enumerate(self.plates):
-            if object.colliderect(self.ball.get_rect()):
-                del self.plates[index]
-                self.score += 10
+        for wall in self.game_objects.walls:
+            if obj.colliderect(wall):
                 return True
-
         return False
+
+    def is_box(self, obj):
+        """
+        Is box interfering for next moving
+        :param obj:
+        :return:
+        """
+        for box in self.game_objects.boxes:
+            if box is not obj and obj.colliderect(box):
+                return True
+        return False
+
+    def _finish_current_level(self):
+        """
+        Finish current level and make another or finish the game
+        :return: None
+        """
+        self.current_level += 1
+        if self.current_level >= len(levels):
+            self.scene.init_game_finished()
+        else:
+            self.scene.init_new_level()
+
+    def is_level_completed(self):
+        """
+        Is game finished (player win)
+        :return:
+        """
+        for target in self.game_objects.targets:
+            for box in self.game_objects.boxes:
+                if box.colliderect(target.get_rect()):
+                    target.status = True
+        for target in self.game_objects.targets:
+            if target.status == False:
+                return False
+        return True

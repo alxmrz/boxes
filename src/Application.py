@@ -1,12 +1,12 @@
-from src.Window import *
-from src.GameState import *
+from src.Window import Window
+from src.GameState import GameState
 
 
 class Application:
     def __init__(self):
         self.running = True
+        self.window = Window(self, 900, 600, 'Boxes')
         self.game_state = GameState(self)
-        self.window = Window(self, 900, 600, 'Arkanoid')
 
     def run(self):
         """
@@ -18,6 +18,4 @@ class Application:
 
         while self.running:
             self.game_state.update()
-
-
-
+            self.window.display()

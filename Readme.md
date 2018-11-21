@@ -1,6 +1,6 @@
-#Arkanoid#
+# Boxes #
 
-A minimalistic arkanoid-like game.
+A game for putting boxes into targets.
 
 You need the `Pygame` module to run it.
 
